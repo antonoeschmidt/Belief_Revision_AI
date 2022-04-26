@@ -37,22 +37,18 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
         clauses = kb.beliefs + [sympy.Not(sentence)]
         for i, claus in enumerate(clauses):
             clauses[i] = sympy.to_cnf(claus)
-        new = []
+        new = set()
         pairs = list(itertools.combinations(clauses,2))
         while 1:
             for pair in pairs:
                 resolvents = Resolve(pair[0],pair[1])
                 if not resolvents:
                     return True
-                new += (resolvents)
+                new = new.union(resolvents)
 
-            if set(new).issubset(set(clauses)):
+            if new.issubset(set(clauses)):
                 return False
             clauses += new
-
-            
-        
-
 
 
 def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.BooleanFunction):
@@ -69,16 +65,16 @@ def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.Boo
     return output
     
 
-x = sympy.Symbol("x")
-b = sympy.Symbol("b")
-c = sympy.Symbol("c")
-d = sympy.Symbol("d")
-test = sympy.And(sympy.And(x,b),c)
-test2 = sympy.And(sympy.And(d,sympy.Not(b)),sympy.Not(c))
-kb = Knowledge_base()
-kb.add(test)
+# x = sympy.Symbol("x")
+# b = sympy.Symbol("b")
+# c = sympy.Symbol("c")
+# d = sympy.Symbol("d")
+# test = sympy.And(sympy.And(x,b),c)
+# test2 = sympy.And(sympy.And(d,sympy.Not(b)),sympy.Not(c))
+# kb = Knowledge_base()
+# kb.add(test)
 
-print(Entail(kb,test2))
-kb2 = Knowledge_base()
-kb2.add(x)
-print(Entail(kb2,b))
+# print(Entail(kb,test2))
+# kb2 = Knowledge_base()
+# kb2.add(x)
+# print(Entail(kb2,b))

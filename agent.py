@@ -1,3 +1,4 @@
+import itertools
 from pydoc import resolve
 import sympy
 from knowledge_base import Knowledge_base
@@ -39,15 +40,15 @@ def entail(kb: Knowledge_base, sentence):
         for claus in kb.beliefs:
             clauses.append(sympy.to_cnf(claus))
         new = []
-        pairs = [[]]
+        pairs = list(itertools.combinations(clauses,2))
         while 1:
-            for i in range(2):
-                resolvents = Resolve()
-                if resolvents.isEmpty():
+            for pair in pairs:
+                resolvents = Resolve(pair[0],pair[1])
+                if not resolvents:
                     return True
                 new.append(resolvents)
 
-            if new.__contains__(clauses) or clauses.__contains__(new):
+            if set(new) & set(clauses):
                 return False
             clauses += new
             

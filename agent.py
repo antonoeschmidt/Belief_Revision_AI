@@ -34,10 +34,9 @@ class Agent():
     
     
 def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
-        kb.add(sympy.Not(sentence))
-        clauses = []
-        for claus in kb.beliefs:
-            clauses.append(sympy.to_cnf(claus))
+        clauses = kb.beliefs + [sympy.Not(sentence)]
+        for i, claus in enumerate(clauses):
+            clauses[i] = sympy.to_cnf(claus)
         new = []
         pairs = list(itertools.combinations(clauses,2))
         while 1:

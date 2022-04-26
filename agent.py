@@ -45,7 +45,7 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
                 resolvents = Resolve(pair[0],pair[1])
                 if not resolvents:
                     return True
-                new.append(resolvents)
+                new += (resolvents)
 
             if set(new).issubset(set(clauses)):
                 return False

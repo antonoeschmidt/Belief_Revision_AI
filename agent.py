@@ -63,7 +63,7 @@ def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.Boo
     if output == ci.args + cj.args:
         return []
     return output
-    
+
 
 # x = sympy.Symbol("x")
 # b = sympy.Symbol("b")
@@ -75,6 +75,18 @@ def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.Boo
 # kb.add(test)
 
 # print(Entail(kb,test2))
+
+
+# # The issue is in Resolve()
+# # x and b is a pure Symbol and .args is there fore empty....
+# # when checking if b entails Not(b) gives the clause ~b. In Resolve() ~b.args is b
+# # This behaviour of syllibals was not anticipated and must be accomodated....
+# # We would like to preserve pure symbols and negation of these
+
 # kb2 = Knowledge_base()
 # kb2.add(x)
+
+# print('x.args', x.args)
+# print('b.args', sympy.Not(b).args)
+
 # print(Entail(kb2,b))

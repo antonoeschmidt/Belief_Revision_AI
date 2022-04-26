@@ -1,5 +1,4 @@
 import itertools
-from pydoc import resolve
 import sympy
 from knowledge_base import Knowledge_base
 
@@ -34,7 +33,7 @@ class Agent():
         pass
     
     
-def entail(kb: Knowledge_base, sentence):
+def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
         kb.add(sympy.Not(sentence))
         clauses = []
         for claus in kb.beliefs:
@@ -48,13 +47,39 @@ def entail(kb: Knowledge_base, sentence):
                     return True
                 new.append(resolvents)
 
-            if set(new) & set(clauses):
+            if set(new).issubset(set(clauses)):
                 return False
             clauses += new
+
             
         
 
 
 
-def Resolve(ci, cj):
-    pass
+def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.BooleanFunction):
+    output = ci.args + cj.args
+    for arg in ci.args:
+        for arg2 in cj.args:
+            if arg == sympy.Not(arg2):
+                # The code for Comprehension is based on the information on:
+                #  https://stackoverflow.com/questions/21682804/pop-remove-items-out-of-a-python-tuple 
+                output = [x for x in output if x != arg and x != arg2] 
+    
+    if output == ci.args + cj.args:
+        return []
+    return output
+    
+
+x = sympy.Symbol("x")
+b = sympy.Symbol("b")
+c = sympy.Symbol("c")
+d = sympy.Symbol("d")
+test = sympy.And(sympy.And(x,b),c)
+test2 = sympy.And(sympy.And(d,sympy.Not(b)),sympy.Not(c))
+kb = Knowledge_base()
+kb.add(test)
+
+print(Entail(kb,test2))
+kb2 = Knowledge_base()
+kb2.add(x)
+print(Entail(kb2,b))

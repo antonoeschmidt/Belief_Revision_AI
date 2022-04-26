@@ -1,3 +1,5 @@
+from pydoc import resolve
+import sympy
 from knowledge_base import Knowledge_base
 
 
@@ -29,3 +31,29 @@ class Agent():
 
     def make_action_Sentence(self,action,t):
         pass
+    
+    
+def entail(kb: Knowledge_base, sentence):
+        kb.add(sympy.Not(sentence))
+        clauses = []
+        for claus in kb.beliefs:
+            clauses.append(sympy.to_cnf(claus))
+        new = []
+        pairs = [[]]
+        while 1:
+            for i in range(2):
+                resolvents = Resolve()
+                if resolvents.isEmpty():
+                    return True
+                new.append(resolvents)
+
+            if new.__contains__(clauses) or clauses.__contains__(new):
+                return False
+            clauses += new
+            
+        
+
+
+
+def Resolve(ci, cj):
+    pass

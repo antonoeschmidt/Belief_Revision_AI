@@ -1,4 +1,5 @@
 import itertools
+import regex
 import sympy
 from knowledge_base import Knowledge_base
 import re
@@ -33,11 +34,26 @@ class Agent():
     def make_action_Sentence(self,action,t):
         pass
     
-    
+
+def splitOperation(clauses, opterator):
+    result = []
+
+    def split(clauses):
+        for claus in clauses:
+            if isinstance(claus, opterator):
+                split(claus.args)
+            else:
+                result.append(claus)
+
+    split(clauses)
+    return result
+
 def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
         clauses = kb.beliefs + [sympy.Not(sentence)]
         for i, claus in enumerate(clauses):
             clauses[i] = sympy.to_cnf(claus)
+
+        clauses = splitOperation(clauses, sympy.And)
         new = set()
         pairs = list(itertools.combinations(clauses,2))
         clauses = set(clauses)

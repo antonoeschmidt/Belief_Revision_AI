@@ -7,6 +7,7 @@ from knowledge_base import Knowledge_base
 p = Symbol('P')
 q = Symbol('Q')
 r = Symbol('R')
+s = Symbol('S')
 
 kb = Knowledge_base()
 kb.add(Implies(Not(p), q))
@@ -25,6 +26,20 @@ a = Symbol('A')
 sentence = And(p,a)
 
 print(sentence)
+
+result = Entail(kb, sentence)
+print(result)
+
+
+
+kb.add(Implies(q,p))
+kb.add(Implies(p,And(r,s)))
+
+sentence = And(p,r,s)
+
+kb.print_self()
+
+print('sentence', sentence)
 
 result = Entail(kb, sentence)
 print(result)

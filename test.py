@@ -4,6 +4,8 @@ from agent import Entail
 
 from knowledge_base import Knowledge_base
 
+## TODO use unittest?
+
 p = Symbol('P')
 q = Symbol('Q')
 r = Symbol('R')
@@ -43,3 +45,8 @@ print('sentence', sentence)
 
 result = Entail(kb, sentence)
 print(result)
+
+kb2 = Knowledge_base()
+kb2.add(q)
+
+print(Entail(kb2,s))

@@ -79,7 +79,9 @@ def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.Boo
                 #  https://stackoverflow.com/questions/21682804/pop-remove-items-out-of-a-python-tuple 
                 output = [x for x in output if x != arg and x != arg2]
 
-    
+    ## !! This in incorrect when nopthing in the input can be resolved 
+    ## eg. ci = Q, cj = ~S then we will at this point still have output = [Q, ~S] which is correct
+    ## but is then incorrectly overwritten....
     if output == Args(ci) + Args(cj):
         return []
     

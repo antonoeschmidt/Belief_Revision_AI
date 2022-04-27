@@ -1,6 +1,7 @@
 import itertools
 import sympy
 from knowledge_base import Knowledge_base
+import re
 
 
 class Agent():
@@ -39,6 +40,7 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
             clauses[i] = sympy.to_cnf(claus)
         new = set()
         pairs = list(itertools.combinations(clauses,2))
+        clauses = set(clauses)
         while 1:
             for pair in pairs:
                 resolvents = Resolve(pair[0],pair[1])
@@ -46,47 +48,44 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
                     return True
                 new = new.union(resolvents)
 
-            if new.issubset(set(clauses)):
+            if new.issubset(clauses):
                 return False
-            clauses += new
+            clauses = clauses.union(new)
 
 
 def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.BooleanFunction):
-    output = ci.args + cj.args
-    for arg in ci.args:
-        for arg2 in cj.args:
+    output = Args(ci) + Args(cj)
+    for arg in Args(ci):
+        for arg2 in Args(cj):
+            test = sympy.Not(arg2)
             if arg == sympy.Not(arg2):
                 # The code for Comprehension is based on the information on:
                 #  https://stackoverflow.com/questions/21682804/pop-remove-items-out-of-a-python-tuple 
-                output = [x for x in output if x != arg and x != arg2] 
+                output = [x for x in output if x != arg and x != arg2]
+
     
-    if output == ci.args + cj.args:
+    if output == Args(ci) + Args(cj):
         return []
+    
     return output
 
-
-# x = sympy.Symbol("x")
-# b = sympy.Symbol("b")
-# c = sympy.Symbol("c")
-# d = sympy.Symbol("d")
-# test = sympy.And(sympy.And(x,b),c)
-# test2 = sympy.And(sympy.And(d,sympy.Not(b)),sympy.Not(c))
-# kb = Knowledge_base()
-# kb.add(test)
-
-# print(Entail(kb,test2))
-
-
-# # The issue is in Resolve()
-# # x and b is a pure Symbol and .args is there fore empty....
-# # when checking if b entails Not(b) gives the clause ~b. In Resolve() ~b.args is b
-# # This behaviour of syllibals was not anticipated and must be accomodated....
-# # We would like to preserve pure symbols and negation of these
-
-# kb2 = Knowledge_base()
-# kb2.add(x)
-
-# print('x.args', x.args)
-# print('b.args', sympy.Not(b).args)
-
-# print(Entail(kb2,b))
+def Args(clause: sympy.logic.boolalg.BooleanFunction):
+    output = []
+    args = str(clause).split('|')
+    negated = False
+    regex = "^[aA-zZ]"
+    for set in args:
+        for symbol in set:
+            
+            if symbol == '~':
+                negated = True
+                continue
+            elif re.search(regex,symbol):
+                if negated:
+                    output.append(sympy.Not(sympy.Symbol(symbol)))
+                else:
+                    output.append(sympy.Symbol(symbol))
+            negated = False
+            
+        
+    return output

@@ -1,4 +1,5 @@
 
+import collections
 import unittest
 
 from sympy import Symbol
@@ -23,7 +24,7 @@ class TestStringMethods(unittest.TestCase):
         result = Resolve(sentence1, sentence2)
 
         # Assert
-        self.assertEquals(result, [Or(p,r)])
+        self.assertEqual(result, [Or(p,r)])
 
     
     def test_set_single_occurences(self):
@@ -39,7 +40,7 @@ class TestStringMethods(unittest.TestCase):
         result = Resolve(sentence1, sentence2)
 
         # Assert
-        self.assertEquals(result, [q])
+        self.assertEqual(result, [q])
 
     
     def test_one_singleton(self):
@@ -55,7 +56,7 @@ class TestStringMethods(unittest.TestCase):
         result = Resolve(sentence1, sentence2)
 
         # Assert
-        self.assertEquals(result, [Or(q,r)])
+        self.assertEqual(result, [Or(q,r)])
 
 
     def test_two_singleton(self):
@@ -69,7 +70,7 @@ class TestStringMethods(unittest.TestCase):
         result = Resolve(sentence1, sentence2)
 
         # Assert
-        self.assertEquals(result, [])
+        self.assertEqual(result, [])
 
     def test_more_than_one_resolvant(self):
         # Arrange
@@ -83,7 +84,7 @@ class TestStringMethods(unittest.TestCase):
         result = Resolve(sentence1, sentence2)
 
         # Assert
-        self.assertEquals(result, [Or(p, Not(p)), Or(q, Not(q))])
+        self.assertEqual(collections.Counter(result), collections.Counter([Or(p, Not(p)), Or(q, Not(q))]))
 
 if __name__ == '__main__':
     unittest.main()

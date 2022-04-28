@@ -68,23 +68,18 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
                 return False
             clauses = clauses.union(new)
 
-
 def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.BooleanFunction):
-    output = Args(ci) + Args(cj)
+    arg_list = list( dict.fromkeys(Args(ci) + Args(cj)))
+    output = []
     for arg in Args(ci):
         for arg2 in Args(cj):
-            test = sympy.Not(arg2)
             if arg == sympy.Not(arg2):
                 # The code for Comprehension is based on the information on:
                 #  https://stackoverflow.com/questions/21682804/pop-remove-items-out-of-a-python-tuple 
-                output = [x for x in output if x != arg and x != arg2]
+                resolvent = [x for x in arg_list if x != arg and x != arg2]
+                if resolvent:
+                    output.append(sympy.Or(*resolvent))
 
-    ## !! This in incorrect when nopthing in the input can be resolved 
-    ## eg. ci = Q, cj = ~S then we will at this point still have output = [Q, ~S] which is correct
-    ## but is then incorrectly overwritten....
-    if output == Args(ci) + Args(cj):
-        return []
-    
     return output
 
 def Args(clause: sympy.logic.boolalg.BooleanFunction):

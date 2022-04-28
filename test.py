@@ -1,52 +1,82 @@
+
+import unittest
+
 from sympy import Symbol
 from sympy.logic.boolalg import *
-from agent import Entail
 
+from agent import Entail
 from knowledge_base import Knowledge_base
 
-## TODO use unittest?
+class TestStringMethods(unittest.TestCase):
 
-p = Symbol('P')
-q = Symbol('Q')
-r = Symbol('R')
-s = Symbol('S')
+    def test_one(self):
+        # Arrange
+        p = Symbol('P')
+        q = Symbol('Q')
 
-kb = Knowledge_base()
-kb.add(Implies(Not(p), q))
+        kb = Knowledge_base()
+        kb.add(Implies(Not(p), q))
 
-kb.print_self()
+        sentence = And(q, p)
 
-sentence = And(q, p)
+        # Act
+        result = Entail(kb, sentence)
 
-print(sentence)
+        # Assert
+        self.assertTrue(result)
 
-result = Entail(kb, sentence)
-print(result)
+    def test_two(self):
+        # Arrange
+        p = Symbol('P')
+        q = Symbol('Q')
+        r = Symbol('R')
 
-a = Symbol('A')
+        kb = Knowledge_base()
+        kb.add(Implies(Not(p), q))
 
-sentence = And(p,a)
+        sentence = And(p,r)
 
-print(sentence)
+        # Act
+        result = Entail(kb, sentence)
 
-result = Entail(kb, sentence)
-print(result)
+        # Assert
+        self.assertFalse(result)
 
+    def test_three(self):
+        # Arrange
+        p = Symbol('P')
+        q = Symbol('Q')
+        r = Symbol('R')
+        s = Symbol('S')
 
+        kb = Knowledge_base()
+        kb.add(Implies(Not(p), q))
+        kb.add(Implies(q,p))
+        kb.add(Implies(p,And(r,s)))
 
-kb.add(Implies(q,p))
-kb.add(Implies(p,And(r,s)))
+        sentence = And(p,r,s)
 
-sentence = And(p,r,s)
+        # Act
+        result = Entail(kb, sentence)
 
-kb.print_self()
+        # Assert
+        self.assertTrue(result)
 
-print('sentence', sentence)
+    def test_four(self):
+        # Arrange
+        p = Symbol('P')
+        q = Symbol('Q')
 
-result = Entail(kb, sentence)
-print(result)
+        kb = Knowledge_base()
+        kb.add(p)
 
-kb2 = Knowledge_base()
-kb2.add(q)
+        sentence = q
 
-print(Entail(kb2,s))
+        # Act
+        result = Entail(kb, sentence)
+
+        # Assert
+        self.assertTrue(result)
+
+if __name__ == '__main__':
+    unittest.main()

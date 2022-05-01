@@ -121,9 +121,10 @@ class TestEntails(unittest.TestCase):
 
         # Assert
         self.assertFalse(result)
+        # FAILS
 
     def test_not_p_imples_q_Entails_q_or_p(self):
-        # https://www.umsu.de/trees/#~3p~5q|=p~1q
+        # https://www.umsu.de/trees/#~3p~5q|=p~2q
         # ¬p→q |= p∨q is true
 
         # Arrange
@@ -141,7 +142,7 @@ class TestEntails(unittest.TestCase):
         # Assert
         self.assertTrue(result)
 
-    def test_not_p_implies_q_Entails_p_and_q(self):
+    def test_not_p_implies_q_Entails_p_and_r(self):
         # https://www.umsu.de/trees/#~3p~5q|=p~1r
         # ¬p→q|=p∧r is false
 
@@ -161,8 +162,8 @@ class TestEntails(unittest.TestCase):
         # Assert
         self.assertFalse(result)
 
-    def test_not_p_implies_q_Entails_p_or_q(self):
-        # https://www.umsu.de/trees/#~3p~5q|=p~1r
+    def test_not_p_implies_q_Entails_p_or_r(self):
+        # https://www.umsu.de/trees/#~3p~5q|=p~2r
         # ¬p→q|=p∨r is false
 
         # Arrange
@@ -270,6 +271,7 @@ class TestEntails(unittest.TestCase):
 
         # Assert
         self.assertFalse(result)
+        # FAILS
 
 
 if __name__ == '__main__':

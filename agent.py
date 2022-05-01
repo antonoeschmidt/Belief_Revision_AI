@@ -55,12 +55,12 @@ def Entail(kb: Knowledge_base, sentence: sympy.logic.boolalg.BooleanFunction):
 
         clauses = splitOperation(clauses, sympy.And)
         new = set()
-        pairs = list(itertools.combinations(clauses,2))
-        clauses = set(clauses)
         while 1:
+            pairs = list(itertools.combinations(clauses,2))
+            clauses = set(clauses)
             for pair in pairs:
                 resolvents = Resolve(pair[0],pair[1])
-                if not resolvents:
+                if False in resolvents:
                     return True
                 new = new.union(resolvents)
 
@@ -77,8 +77,7 @@ def Resolve(ci: sympy.logic.boolalg.BooleanFunction, cj: sympy.logic.boolalg.Boo
                 # The code for Comprehension is based on the information on:
                 #  https://stackoverflow.com/questions/21682804/pop-remove-items-out-of-a-python-tuple 
                 resolvent = [x for x in arg_list if x != arg and x != arg2]
-                if resolvent:
-                    output.append(sympy.Or(*resolvent))
+                output.append(sympy.Or(*resolvent))
 
     return output
 

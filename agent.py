@@ -1,9 +1,7 @@
 import itertools
-import regex
 import sympy
 from knowledge_base import Knowledge_base
 import re
-
 
 class Agent():
     def __init__(self,kb: Knowledge_base):
@@ -19,7 +17,6 @@ class Agent():
         return action
     
     def tell(self,kb: Knowledge_base, percept_sentence):
-        
         pass
     
     def ask(self, kb: Knowledge_base, action_query):
